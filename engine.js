@@ -2,14 +2,11 @@ const { chromium } = require('playwright');
 const { stealth } = require('playwright-stealth');
 
 (async () => {
+    console.log("🚀 OMEGA Engine Node.js Version Started...");
     const browser = await chromium.launch({ headless: true });
-    const context = await browser.newContext();
-    const page = await context.newPage();
-    
-    console.log("🚀 OMEGA Engine Started...");
+    const page = await browser.newPage();
     await page.goto('https://www.youtube.com');
-    console.log("✅ Target Reached: " + await page.title());
-    
+    console.log("✅ Title: " + await page.title());
     await browser.close();
-    console.log("🏁 Engine Task Completed.");
+    console.log("🏁 Completed.");
 })();
