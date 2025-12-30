@@ -1,12 +1,27 @@
-name: OMEGA Cloud Runner
+name: YouTube Search & Retention Engine
 on:
   push:
     branches: [ main ]
-  workflow_dispatch:
+  schedule:
+    - cron: '0 */6 * * *' # Runs every 6 hours automatically
+  workflow_dispatch:      # Allows manual trigger
+
 jobs:
-  run-simulation:
+  boost-video:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Run OMEGA
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install Tools
+        run: |
+          pip install playwright playwright-stealth
+          playwright install chromium
+
+      - name: Execute OMEGA Engine
         run: python3 omega_core.py
