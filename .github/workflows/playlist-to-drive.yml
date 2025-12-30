@@ -1,0 +1,20 @@
+name: YouTube to Drive Sync
+on: [workflow_dispatch]
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Tools
+        run: |
+          sudo curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o /usr/local/bin/yt-dlp
+          sudo chmod a+rx /usr/local/bin/yt-dlp
+          sudo apt-get install rclone -y
+      - name: Configure Rclone
+        run: |
+          mkdir -p ~/.config/rclone
+          echo "${{ secrets.RCLONE_CONFIG }}" > ~/.config/rclone/rclone.conf
+      - name: Download & Upload
+        run: |
+          yt-dlp -f "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best"                  -o "downloads/%(title)s.%(ext)s"                  "https://www.youtube.com/playlist?list=PL7TpI0K9I87K5qQte9awzBO2QkeMl-UAN"
+          rclone copy ./downloads/ gdrive:YouTube_Uploads -v
