@@ -1,55 +1,55 @@
 import asyncio
 import random
 from playwright.async_api import async_playwright
-from playwright_stealth import stealth_async
+from playwright_stealth import stealth
 
 async def run_organic_boost():
     async with async_playwright() as p:
-        # Launching with stealth to mimic a real human browser
         browser = await p.chromium.launch(headless=True)
         context = await browser.new_context(
             user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36",
-            viewport={'width': random.choice([1366, 1920]), 'height': random.choice([768, 1080])}
+            viewport={'width': 1920, 'height': 1080}
         )
         page = await context.new_page()
-        await stealth_async(page)
+        # تصحيح الاستدعاء هنا
+        await stealth(page)
 
         try:
-            # 1. Start from YouTube Home
             print("🔍 Accessing YouTube...")
             await page.goto("https://www.youtube.com")
-            await asyncio.sleep(random.uniform(2, 4))
+            await asyncio.sleep(random.uniform(3, 6))
 
-            # 2. Perform Organic Search
             search_query = "أهم 50 أمر لينكس في 6 دقايق ! Top 50 Linux Commands"
             print(f"⌨️ Searching for: {search_query}")
+            
+            # التعامل مع أي نافذة موافقة قد تظهر
+            try:
+                if await page.query_selector('button[aria-label="Accept all"]'):
+                    await page.click('button[aria-label="Accept all"]')
+            except:
+                pass
+
             await page.fill('input[name="search_query"]', search_query)
             await page.keyboard.press("Enter")
-            await page.wait_for_selector("ytd-video-renderer")
+            await page.wait_for_selector("ytd-video-renderer", timeout=10000)
 
-            # 3. Locate the specific video ID: FW_PekFe-Lk
             target_id = "FW_PekFe-Lk"
             video_link = f'a[href*="{target_id}"]'
             
             if await page.query_selector(video_link):
-                print("🎯 Target video found! Boosting CTR...")
+                print("🎯 Target found! Increasing CTR...")
                 await page.click(video_link)
                 
-                # 4. Watch simulation (High Retention: 80-95% of 6:10 min video)
-                watch_seconds = random.randint(310, 360)
-                print(f"🎬 Watching for {watch_seconds // 60}m {watch_seconds % 60}s...")
-                
-                # Randomized interaction (Scrolling)
-                await asyncio.sleep(10)
-                await page.mouse.wheel(0, 500)
+                # مشاهدة 90% من الفيديو (فيديو 6 دقائق = 360 ثانية)
+                watch_seconds = random.randint(320, 355)
+                print(f"🎬 High Retention Watch: {watch_seconds} seconds...")
                 await asyncio.sleep(watch_seconds)
-                
-                print("✅ Successfully boosted search authority for @BasmatHiTech.")
+                print("✅ Video boost completed successfully.")
             else:
-                print("❌ Video ID not found in the top results.")
+                print("❌ Video ID not visible in top results.")
 
         except Exception as e:
-            print(f"⚠️ Error encountered: {e}")
+            print(f"⚠️ Runtime Error: {e}")
         finally:
             await browser.close()
 

@@ -3,8 +3,8 @@ on:
   push:
     branches: [ main ]
   schedule:
-    - cron: '0 */6 * * *' # Runs every 6 hours automatically
-  workflow_dispatch:      # Allows manual trigger
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
 
 jobs:
   boost-video:
@@ -18,10 +18,11 @@ jobs:
         with:
           python-version: '3.9'
 
-      - name: Install Tools
+      - name: Install Tools & System Deps
         run: |
           pip install playwright playwright-stealth
           playwright install chromium
+          sudo playwright install-deps chromium
 
       - name: Execute OMEGA Engine
         run: python3 omega_core.py
