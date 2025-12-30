@@ -7,10 +7,7 @@ async function runView(num) {
         const context = await browser.newContext({
             userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
         });
-        
         const page = await context.newPage();
-        
-        // Anti-bot mitigation
         await page.addInitScript(() => {
             Object.defineProperty(navigator, 'webdriver', { get: () => false });
         });
@@ -35,7 +32,7 @@ async function runView(num) {
 }
 
 (async () => {
-    console.log("🚀 OMEGA Engine: Initializing Sequential Views");
+    console.log("🚀 OMEGA Engine: Initializing...");
     await runView(1);
     await runView(2);
     console.log("🏁 Testing Sequence Completed.");
