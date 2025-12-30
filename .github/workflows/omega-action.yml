@@ -1,19 +1,16 @@
 name: YouTube Search & Retention Engine (Node.js)
-on:
-  workflow_dispatch:
+on: [workflow_dispatch]
 jobs:
   boost-video:
     runs-on: ubuntu-24.04
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: OMEGA Unified Execution
+      - name: Execution Box
         run: |
           npm init -y
-          npm install playwright playwright-stealth
+          npm install playwright@1.49.1 playwright-stealth@2.0.1
           npx playwright install chromium --with-deps
           node engine.js
