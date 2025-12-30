@@ -1,28 +1,19 @@
-name: YouTube Search & Retention Engine
+name: YouTube Search & Retention Engine (Node.js)
 on:
-  push:
-    branches: [ main ]
-  schedule:
-    - cron: '0 */6 * * *'
   workflow_dispatch:
-
 jobs:
   boost-video:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
-
-      - name: Setup Python
-        uses: actions/setup-python@v4
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          python-version: '3.9'
-
-      - name: Install Tools & System Deps
+          node-version: '20'
+      - name: OMEGA Unified Execution
         run: |
-          pip install playwright playwright-stealth
-          playwright install chromium
-          sudo playwright install-deps chromium
-
-      - name: Execute OMEGA Engine
-        run: python3 omega_core.py
+          npm init -y
+          npm install playwright playwright-stealth
+          npx playwright install chromium --with-deps
+          node engine.js
