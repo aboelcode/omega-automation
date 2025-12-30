@@ -1,4 +1,4 @@
-name: YouTube to Drive Sync (Safe Mode)
+name: YouTube to Drive Sync (Safe Mode 720p)
 on: [workflow_dispatch]
 jobs:
   sync:
@@ -15,11 +15,11 @@ jobs:
           mkdir -p ~/.config/rclone
           echo "${{ secrets.RCLONE_CONFIG }}" > ~/.config/rclone/rclone.conf
           echo "${{ secrets.YT_COOKIES }}" > youtube-cookies.txt
-      - name: Download & Upload (One by One)
+      - name: Download & Upload (One by One 720p)
         run: |
-          # التحميل والرفع والمسح فوراً لتوفير المساحة
+          # التحميل بجودة 720p والرفع فوراً ثم الحذف
           yt-dlp --cookies youtube-cookies.txt \
                  --ignore-errors \
-                 -f "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best" \
-                 --exec "rclone move {} gdrive:YouTube_Uploads -v && rm {}" \
+                 -f "bestvideo[height<=720][ext=mp4]+bestaudio[ext=m4a]/best[height<=720][ext=mp4]/best" \
+                 --exec "rclone move {} gdrive:YouTube_Uploads -v && echo '✅ Uploaded and Deleted: {}'" \
                  "https://www.youtube.com/playlist?list=PL7TpI0K9I87K5qQte9awzBO2QkeMl-UAN"
